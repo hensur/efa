@@ -96,7 +96,7 @@ public class EmilConfigFrame extends JDialog implements ActionListener {
     efwdirButton.setMinimumSize(new Dimension(59, 25));
     efwdirButton.setNextFocusableComponent(dir_csv);
     efwdirButton.setPreferredSize(new Dimension(59, 25));
-    efwdirButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource("/de/nmichael/efa/img/prog_open.gif")));
+    efwdirButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource(Daten.IMAGEPATH + "prog_open.gif")));
     cvsdirButton.setMinimumSize(new Dimension(59, 25));
     cvsdirButton.setNextFocusableComponent(std_csv);
     cvsdirButton.setPreferredSize(new Dimension(59, 25));
@@ -106,7 +106,7 @@ public class EmilConfigFrame extends JDialog implements ActionListener {
         cvsdirButton_actionPerformed(e);
       }
     });
-    cvsdirButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource("/de/nmichael/efa/img/prog_open.gif")));
+    cvsdirButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource(Daten.IMAGEPATH + "prog_open.gif")));
     stdcvsButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         stdcvsButton_actionPerformed(e);
@@ -115,7 +115,7 @@ public class EmilConfigFrame extends JDialog implements ActionListener {
     stdcvsButton.setMinimumSize(new Dimension(59, 25));
     stdcvsButton.setNextFocusableComponent(nurExportErfuellt);
     stdcvsButton.setPreferredSize(new Dimension(59, 25));
-    stdcvsButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource("/de/nmichael/efa/img/prog_save.gif")));
+    stdcvsButton.setIcon(new ImageIcon(EmilConfigFrame.class.getResource(Daten.IMAGEPATH + "prog_save.gif")));
     jLabel2.setDisplayedMnemonic('C');
     jLabel2.setLabelFor(dir_csv);
     jLabel2.setText("CSV-Verzeichnis: ");

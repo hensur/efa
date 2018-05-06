@@ -291,7 +291,7 @@ public class EfaBaseFrame extends BaseDialog implements IItemListener {
     }
 
     private void iniGuiBase() {
-        setIconImage(Toolkit.getDefaultToolkit().createImage(EfaBaseFrame.class.getResource("/de/nmichael/efa/img/efa_icon.png")));
+        setIconImage(Toolkit.getDefaultToolkit().createImage(EfaBaseFrame.class.getResource(Daten.IMAGEPATH + "efa_icon.png")));
         mainPanel.setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {

@@ -152,9 +152,9 @@ public class Daten {
     public final static String ONLINEUPDATE_INFO_DRV = "http://efa.nmichael.de/eou/eoudrv.xml";
     public final static String EFW_UPDATE_DATA = "http://efa.nmichael.de/efw.data";
     public final static String INTERNET_EFAMAIL = "http://efa.rudern.de/efamail.pl"; // was: "http://cgi.snafu.de/nmichael/user-cgi-bin/efamail.pl";
-    public final static String IMAGEPATH = "/de/nmichael/efa/img/";
-    public final static String FILEPATH = "/de/nmichael/efa/files/";
-    public final static String DATATEMPLATEPATH = "/de/nmichael/efa/data/templates/";
+    public final static String IMAGEPATH = "/img/";
+    public final static String FILEPATH = "/files/";
+    public final static String DATATEMPLATEPATH = "/templates/";
 
     public final static int AUTO_EXIT_MIN_RUNTIME = 60; // Minuten, die efa mindestens gelaufen sein muß, damit es zu einem automatischen Beenden/Restart kommt (60)
     public final static int AUTO_EXIT_MIN_LAST_USED = 5; // Minuten, die efa mindestens nicht benutzt wurde, damit Beenden/Neustart nicht verzögert wird (muß kleiner als AUTO_EXIT_MIN_RUNTIME sein!!!) (5)

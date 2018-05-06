@@ -41,7 +41,7 @@ public class StatisticPDFWriter extends StatisticXMLWriter {
             javax.xml.transform.TransformerFactory trfac = javax.xml.transform.TransformerFactory.newInstance();
             javax.xml.transform.Transformer trans;
             trans = trfac.newTransformer(new javax.xml.transform.stream.StreamSource(new File(xslOutputFile)));
-            trans.transform(new javax.xml.transform.stream.StreamSource(new File(xmlOutputFile)), new javax.xml.transform.stream.StreamResult(new File(foOutputFile)));
+            trans.transform(new javax.xml.transform.stream.StreamSource(new File(xmlOutputFile)), new javax.xml.transform.stream.StreamResult(foOutputFile));
         } catch (Exception e) {
             Dialog.error("Could not transform XML using XSLT Stylesheet: " + e.getMessage());
             Logger.logdebug(e);
