@@ -1,0 +1,6 @@
+# Ignore IntelliJ IDEA folder and modules everywhere
+**/.idea
+**/*.iml
+
+# Ignore maven output folder
+/target
