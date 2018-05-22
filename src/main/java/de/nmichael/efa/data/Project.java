@@ -538,6 +538,21 @@ public class Project extends StorageObject {
         return items;
     }
 
+    /*
+    Returns all Logbooks in the Project
+
+    @return All logbooks
+     */
+    public Vector<Logbook> getAllLogbooks() {
+        Vector<Logbook> logbooks = new Vector<Logbook>();
+        String[] logbookNames = getAllLogbookNames();
+        for (int i = 0; logbookNames != null && i < logbookNames.length; i++) {
+            Logbook tmp = getLogbook(logbookNames[i], false);
+            logbooks.add(tmp);
+        }
+        return logbooks;
+    }
+
     public Hashtable<String, String> getClubworks() {
         Hashtable<String, String> items = new Hashtable<String, String>();
         String[] clubworks = getAllClubworkNames();
