@@ -205,6 +205,7 @@ public class Daten {
     public static final int APPL_EMIL = 5;
     public static final int APPL_ELWIZ = 6;
     public static final int APPL_EDDI = 7;
+    public static final int APPL_API = 8;
     public static final String APPLNAME_EFA = "efaBase";
     public static final String APPLNAME_EFADIREKT = "efaBths";
     public static final String APPLNAME_CLI = "efaCLI";
@@ -212,6 +213,7 @@ public class Daten {
     public static final String APPLNAME_EMIL = "emil";
     public static final String APPLNAME_ELWIZ = "elwiz";
     public static final String APPLNAME_EDDI = "eddi";
+    public static final String APPLNAME_API = "efaAPI";
 
     // Applikations-Mode
     public static final int APPL_MODE_NORMAL = 1;
@@ -369,6 +371,9 @@ public class Daten {
                 break;
             case APPL_EDDI:
                 applName = APPLNAME_EDDI;
+                break;
+            case APPL_API:
+                applName = APPLNAME_API;
                 break;
         }
         efaStartTime = System.currentTimeMillis();
