@@ -43,6 +43,16 @@ public abstract class DataRecord implements Cloneable, Comparable {
         }
     }
 
+    /*
+    Temporary Constructor for Record Creation without context.
+    Example: The API aims to decode json into a DataRecord, but the method can't
+    use instance variable like a logbook, so a template record has to be used.
+    It has to be filled with persistence data later on.
+     */
+    public DataRecord(MetaData metadata){
+        this(null, metadata);
+    }
+
     protected static MetaData constructMetaData(String dataType, Vector<String> fields, Vector<Integer> types, boolean versionized) {
         if (versionized) {
             fields.add(DataRecord.VALIDFROM);       types.add(IDataAccess.DATA_LONGINT);
@@ -908,6 +918,10 @@ public abstract class DataRecord implements Cloneable, Comparable {
 
     public StorageObject getPersistence() {
         return persistence;
+    }
+
+    public void setPersistence(StorageObject persistence) {
+        this.persistence = persistence;
     }
 
     protected ItemTypeStringAutoComplete getGuiItemTypeStringAutoComplete(String name, UUID value, int type, String category,

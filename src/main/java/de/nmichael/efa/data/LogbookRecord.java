@@ -234,6 +234,10 @@ public class LogbookRecord extends DataRecord {
         super(logbook, metaData);
     }
 
+    public LogbookRecord() {
+        super(MetaData.getMetaData(Logbook.DATATYPE));
+    }
+
     public DataRecord createDataRecord() { // used for cloning
         return getPersistence().createNewRecord();
     }

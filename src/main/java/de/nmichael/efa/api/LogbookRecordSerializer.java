@@ -52,8 +52,7 @@ public class LogbookRecordSerializer extends JsonSerializer<LogbookRecord> {
 
         jgen.writeObjectFieldStart("destination");
         jgen.writeStringField("id", value.getDestinationId().toString());
-        jgen.writeStringField("name", value.getDestinationName());
-        jgen.writeStringField("variant", value.getDestinationVariantName());
+        jgen.writeStringField("variant", value.getDestinationAndVariantName(-1, false, false));
         jgen.writeEndObject();
 
         if (value.getSessionGroupId() != null) {

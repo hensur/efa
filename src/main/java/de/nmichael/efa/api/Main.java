@@ -15,7 +15,7 @@ public class Main extends Program {
 
     public Main(String[] args) {
         super(Daten.APPL_API, args);
-        Project.openProject(args[1], true);
+        Project.openProject(args[0], true);
 
         try {
             final ResourceConfig resourceConfig = getAPIConfig();

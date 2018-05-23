@@ -29,6 +29,7 @@ import javax.ws.rs.ext.Provider;
             SimpleModule efaModule = new SimpleModule("efaModule",
                                           new Version(1,0,0,null, null, null));
             efaModule.addSerializer(LogbookRecord.class, new LogbookRecordSerializer());
+            efaModule.addDeserializer(LogbookRecord.class, new LogbookRecordDeserializer());
             result.registerModule(efaModule);
 
             return result;

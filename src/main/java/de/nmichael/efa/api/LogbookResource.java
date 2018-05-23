@@ -6,10 +6,7 @@ import de.nmichael.efa.data.Logbook;
 import de.nmichael.efa.data.LogbookRecord;
 import de.nmichael.efa.data.types.DataTypeIntString;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /*
@@ -42,7 +39,7 @@ public class LogbookResource {
 
     @return array of logbook entries as json nodes
      */
-    private LogbookRecord[] getAllEntries(int page, int per_page){
+    private LogbookRecord[] getAllEntries(int page, int per_page) {
         return null;
     }
 
@@ -51,7 +48,20 @@ public class LogbookResource {
 
     @param new logbook record
      */
-    private void saveEntryNode(ObjectNode entry){
-        return;
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void saveEntryNode(LogbookRecord entry) {
+        Logbook logbook = Daten.project.getLogbook("2018", false);
+        entry.setEntryId(logbook.getNextEntryNo());
+        entry.setPersistence(logbook);
+        long lock = 0;
+        try {
+            lock = logbook.data().acquireGlobalLock();
+            logbook.data().add(entry, lock);
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            logbook.data().releaseGlobalLock(lock);
+        }
     }
 }
