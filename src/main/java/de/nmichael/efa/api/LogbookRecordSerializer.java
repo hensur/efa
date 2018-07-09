@@ -17,14 +17,14 @@ public class LogbookRecordSerializer extends JsonSerializer<LogbookRecord> {
         jgen.writeStartObject();
         jgen.writeNumberField("id", value.getEntryId().intValue());
         jgen.writeStringField("date", value.getDate().getDateString("YYYY-MM-DD"));
-        jgen.writeStringField("end_date", value.getDate().getDateString("YYYY-MM-DD"));
+        jgen.writeStringField("endDate", value.getDate().getDateString("YYYY-MM-DD"));
 
         jgen.writeNumberField("distance", value.getDistance().getValueInMeters());
         jgen.writeStringField("comments", value.getComments());
-        jgen.writeStringField("session_type", value.getSessionType());
+        jgen.writeStringField("sessionType", value.getSessionType());
 
-        jgen.writeStringField("start_time", value.getStartTime().toString());
-        jgen.writeStringField("end_time", value.getEndTime().toString());
+        jgen.writeStringField("startTime", value.getStartTime().toString());
+        jgen.writeStringField("endTime", value.getEndTime().toString());
 
         jgen.writeObjectFieldStart("boat");
         jgen.writeStringField("id", value.getBoatId().toString());
@@ -56,7 +56,7 @@ public class LogbookRecordSerializer extends JsonSerializer<LogbookRecord> {
         jgen.writeEndObject();
 
         if (value.getSessionGroupId() != null) {
-            jgen.writeObjectFieldStart("session_group");
+            jgen.writeObjectFieldStart("sessionGroup");
             jgen.writeStringField("id", value.getSessionGroupId().toString());
             jgen.writeStringField("name", value.getSessionGroupAsName());
             jgen.writeEndObject();

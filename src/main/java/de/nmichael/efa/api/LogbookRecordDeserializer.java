@@ -22,14 +22,14 @@ public class LogbookRecordDeserializer extends JsonDeserializer<LogbookRecord> {
         LogbookRecord lr = new LogbookRecord();
 
         lr.setDate(DataTypeDate.parseDate(node.get("date").asText()));
-        lr.setEndDate(DataTypeDate.parseDate(node.get("end_date").asText()));
+        lr.setEndDate(DataTypeDate.parseDate(node.get("endDate").asText()));
 
         lr.setDistance(new DataTypeDistance(node.get("distance").longValue()));
         lr.setComments(node.get("comments").textValue());
-        lr.setSessionType(node.get("session_type").textValue());
+        lr.setSessionType(node.get("sessionType").textValue());
 
-        lr.setStartTime(DataTypeTime.parseTime(node.get("start_time").textValue()));
-        lr.setEndTime(DataTypeTime.parseTime(node.get("end_time").textValue()));
+        lr.setStartTime(DataTypeTime.parseTime(node.get("startTime").textValue()));
+        lr.setEndTime(DataTypeTime.parseTime(node.get("endTime").textValue()));
 
         if (node.get("boat") != null) {
             lr.setBoatId(UUID.fromString(node.get("boat").get("id").textValue()));
