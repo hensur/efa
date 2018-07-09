@@ -151,6 +151,13 @@ public class LogbookRecord extends DataRecord {
         return "Crew"+pos+"Name";
     }
 
+    public static String getCrewI18nName(int pos) {
+        if (pos == 0) {
+            return International.getString("Cox");
+        }
+        return International.getString("Person") + " " + pos;
+    }
+
     public static void initialize() {
         Vector<String> f = new Vector<String>();
         Vector<Integer> t = new Vector<Integer>();
