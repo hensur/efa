@@ -9,6 +9,7 @@
  */
 package de.nmichael.efa.util;
 
+import de.nmichael.efa.data.LogbookRecord;
 import de.nmichael.efa.efa1.Synonyme;
 import de.nmichael.efa.efa1.DatenFelder;
 import de.nmichael.efa.core.config.EfaTypes;
@@ -2064,6 +2065,12 @@ public class EfaUtil {
         }
         return null;
     }
+
+    public static String getLogbookRecordStringWithEntryNo(LogbookRecord r) {
+        return International.getMessage("Fahrtenbucheintrag #{entryno}",
+                r.getEntryId().toString());
+    }
+
 
     public static void main(String args[]) {
         String text = "abc & def";
