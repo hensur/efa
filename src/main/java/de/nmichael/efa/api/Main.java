@@ -40,7 +40,9 @@ public class Main extends Program {
                 AboutResource.class,
                 ProjectResource.class,
                 LogbookResource.class,
-                ObjectMapperProvider.class
+                ObjectMapperProvider.class,
+                BoatResource.class,
+                PersonResource.class
         );
         return rsConfig;
     }

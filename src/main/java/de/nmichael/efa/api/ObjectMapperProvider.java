@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import de.nmichael.efa.data.BoatRecord;
 import de.nmichael.efa.data.LogbookRecord;
+import de.nmichael.efa.data.PersonRecord;
 
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
@@ -29,7 +31,9 @@ import javax.ws.rs.ext.Provider;
             SimpleModule efaModule = new SimpleModule("efaModule",
                                           new Version(1,0,0,null, null, null));
             efaModule.addSerializer(LogbookRecord.class, new LogbookRecordSerializer());
+            efaModule.addSerializer(BoatRecord.class, new BoatRecordSerializer());
             efaModule.addDeserializer(LogbookRecord.class, new LogbookRecordDeserializer());
+            efaModule.addSerializer(PersonRecord.class, new PersonRecordSerializer());
             result.registerModule(efaModule);
 
             return result;
