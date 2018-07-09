@@ -384,6 +384,10 @@ public class AdminRecord extends DataRecord implements IItemListener {
         return getBool(EXECCOMMAND);
     }
 
+    public Boolean isAllowed(String action){
+        return getBool(action);
+    }
+
     public String[] getQualifiedNameFields() {
         return new String[] { NAME };
     }
