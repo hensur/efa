@@ -120,6 +120,26 @@ public class Messages extends StorageObject {
         return r;
     }
 
+    public boolean saveMessage(MessageRecord r) {
+        if (Daten.efaConfig.getValueNotificationMarkReadAdmin() &&
+                MessageRecord.TO_ADMIN.equals(r.getTo())) {
+            r.setRead(true);
+        }
+        if (Daten.efaConfig.getValueNotificationMarkReadBoatMaintenance() &&
+                MessageRecord.TO_BOATMAINTENANCE.equals(r.getTo())) {
+            r.setRead(true);
+        }
+        try {
+            data().add(r);
+            return true;
+        } catch(Exception e) {
+            Logger.log(Logger.WARNING, Logger.MSG_WARN_SAVEMESSAGE,
+                    "Save Message Failed: " + e.toString());
+            Logger.logdebug(e);
+            return false;
+        }
+    }
+
     public long countUnreadMessages() {
         long lockId = -1;
         try {
