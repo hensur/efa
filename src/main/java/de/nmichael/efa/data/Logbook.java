@@ -10,10 +10,13 @@
 
 package de.nmichael.efa.data;
 
+import de.nmichael.efa.Daten;
+import de.nmichael.efa.ex.EfaException;
 import de.nmichael.efa.util.*;
 import de.nmichael.efa.data.storage.*;
 import de.nmichael.efa.data.types.*;
 import de.nmichael.efa.ex.EfaModifyException;
+
 import java.util.*;
 
 // @i18n complete
@@ -39,7 +42,47 @@ public class Logbook extends StorageObject {
     public DataRecord createNewRecord() {
         return new LogbookRecord(this, MetaData.getMetaData(DATATYPE));
     }
-    
+
+    /**
+     * Save or update a LogbookRecord in the logbook.
+     *
+     * @param r The record to save/update
+     * @param isNewRecord true if the record should be treated as new, false if it is an update
+     * @param oldRecord in case of an update, give the oldRecord for comparison
+     * @return The new, updated, record or the previously given one if it was a new record
+     * @throws EfaException thrown if the record can't be added
+     */
+    public LogbookRecord save(LogbookRecord r, boolean isNewRecord, LogbookRecord oldRecord) throws EfaException {
+        if (!isOpen()) {
+            return null;
+        }
+
+        long lock = 0;
+        try {
+            boolean changeEntryNo = false;
+            if (!isNewRecord && oldRecord != null && !oldRecord.getEntryId().equals(r.getEntryId())) {
+                // the entry number has probably changed, we will therefore delete the old record
+                lock = data().acquireGlobalLock();
+                data().delete(oldRecord.getKey(), lock);
+                changeEntryNo = true;
+            }
+
+            if (isNewRecord || changeEntryNo) {
+                data().add(r, lock);
+                return r;
+            } else {
+                DataRecord newRecord = data().update(r, lock);
+                return (LogbookRecord) newRecord;
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (lock != 0) {
+                data().releaseGlobalLock(lock);
+            }
+        }
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -199,6 +242,35 @@ public class Logbook extends StorageObject {
         return d.isAfterOrEqual(startDate) && d.isBeforeOrEqual(endDate);
     }
 
+    /**
+     * Save a Record to tmp dir and create a late entry message for the admin.
+     * The admin can then import the tmp record and save it to the logbook.
+     *
+     * @return MessageRecord that can be sent to the admin
+     */
+    public MessageRecord saveForLateEntry(LogbookRecord r) {
+        String fName = Daten.efaTmpDirectory + "entry_" +
+                EfaUtil.getCurrentTimeStampYYYYMMDD_HHMMSS() + ".xml";
+        r.setEntryId(null);
+        if (r.saveRecordToXmlFile(fName)) {
+            MessageRecord tmp = Daten.project.getMessages(false).createMessageRecord();
+            tmp.setTo(MessageRecord.TO_ADMIN);
+            tmp.setFrom(Daten.EFA_SHORTNAME);
+            tmp.setSubject(International.getString("Nachtrag"));
+            tmp.setText(
+                    International.getMessage("Ein Nachtrag für {datum} konnte im Fahrtenbuch {logbook} nicht gespeichert werden, " +
+                                    "da sein Datum außerhalb des Zeitraums für dieses Fahrtenbuch liegt ({dateFrom} - {dateTo}).",
+                            r.getDate().toString(), getName(),
+                            getStartDate().toString(), getEndDate().toString()) + "\n\n" +
+                            r.getLogbookRecordAsStringDescription() + "\n\n" +
+                            International.getMessage("Der Eintrag wurde als Importdatei {name} abgespeichert " +
+                                            "und kann durch Import dieser Datei zum entsprechenden Fahrtenbuch hinzugefügt werden.",
+                                    fName)
+            );
+            return tmp;
+        }
+        return null;
+    }
 
     public void preModifyRecordCallback(DataRecord record, boolean add, boolean update, boolean delete) throws EfaModifyException {
         if (add || update) {
