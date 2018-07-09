@@ -1,6 +1,5 @@
 package de.nmichael.efa.api;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.nmichael.efa.Daten;
 import de.nmichael.efa.data.Logbook;
 import de.nmichael.efa.data.LogbookRecord;
@@ -12,12 +11,12 @@ import javax.ws.rs.core.MediaType;
 /*
 Allows the creation and retrieval of LogbookRecords
  */
-@Path("logbook")
+@Path("logbooks")
 public class LogbookResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ObjectNode getAllLogbookEntries() {
+    public LogbookRecord[] getAllLogbookEntries() {
         return null;
     }
 
