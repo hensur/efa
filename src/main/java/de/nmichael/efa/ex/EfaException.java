@@ -39,11 +39,14 @@ public class EfaException extends Exception {
 
     public String toString() {
         return getClass().getCanonicalName()+": " + key + " (" + msg + ")";
-        //return getClass().getCanonicalName()+": " + key + " (" + msg + ") at " + getStackTraceAsString();
     }
 
     public String getMessage() {
         return msg;
+    }
+
+    public String getTitle() {
+        return key;
     }
 
 }
