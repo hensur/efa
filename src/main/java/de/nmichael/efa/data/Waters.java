@@ -11,6 +11,7 @@
 package de.nmichael.efa.data;
 
 import de.nmichael.efa.Daten;
+import de.nmichael.efa.data.types.DataTypeList;
 import de.nmichael.efa.util.*;
 import de.nmichael.efa.data.storage.*;
 import de.nmichael.efa.ex.*;
@@ -65,6 +66,34 @@ public class Waters extends StorageObject {
             if (keys != null && keys.length > 0) {
                 return (WatersRecord) data().get(keys[0]);
             }
+        } catch(Exception e) {
+            Logger.logdebug(e);
+        }
+        return null;
+    }
+
+    public DataTypeList[] findWaters(Vector<String> wlist) {
+        try {
+            if (wlist.size() == 0) {
+                return null;
+            }
+            DataTypeList<UUID> watersIdList = new DataTypeList<UUID>();
+            DataTypeList<String> watersNameList = new DataTypeList<String>();
+            for (int i=0; i<wlist.size(); i++) {
+                String ws = wlist.get(i).trim();
+                if (ws.length() == 0) {
+                    continue;
+                }
+                WatersRecord w = findWatersByName(ws);
+                if (w != null && w.getId() != null) {
+                    watersIdList.add(w.getId());
+                } else {
+                    watersNameList.add(ws);
+                }
+            }
+            return new DataTypeList[] {
+                    watersIdList, watersNameList
+            };
         } catch(Exception e) {
             Logger.logdebug(e);
         }

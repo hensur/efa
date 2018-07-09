@@ -60,6 +60,7 @@ public class Destinations extends StorageObject {
     public DestinationRecord getDestination(String destinationName, long validAt) {
         return getDestination(destinationName, null, validAt);
     }
+
     public DestinationRecord getDestination(String destinationName, String onlyForBoathouseName, long validAt) {
         try {
             DataKey[] keys = data().getByFields(
@@ -108,6 +109,67 @@ public class Destinations extends StorageObject {
             Logger.logdebug(e);
             return null;
         }
+    }
+
+    private DestinationRecord findDestinationFromString(String s, String boathouseName, long validAt, long deepSearchStart, long deepSearchEnd) {
+        DestinationRecord r = null;
+        try {
+            String[] dest = LogbookRecord.getDestinationNameAndVariantFromString(s);
+            if (dest[0].length() > 0 && dest[1].length() > 0) {
+                // this is a destination of the form "base + variant".
+                // however, it could be that we have an explicit destination "base & variant" in our database.
+                // check for "base & variant" first
+                r = getDestination(dest[0] + " & " + dest[1], boathouseName, validAt);
+                if (r != null) {
+                    return r;
+                }
+            }
+            if (dest[0].length() > 0) {
+                r = getDestination(dest[0], boathouseName, validAt);
+
+                // If we have not found a valid record, we next try whether we can find
+                // any (currently invalid) record for that name (within the validiy range
+                // of this lookbook). If we find such a record, we use its ID to find
+                // yet another record of the same ID, which might be valid now.
+                // Since we search by name, it could be that the user entered name "A", which is
+                // not currently valid, but appears in the AutoComplete list because it is valid
+                // some other time for this logbook. It might be that "A" is just another name for
+                // "B" of the same record, which is valid. If there is a "B", we will use that.
+                // That means, even though the user entered "A", we will save the ID, and display "B".
+                if (validAt > 0 && r == null) {
+                    DestinationRecord r2 = getDestination(dest[0], deepSearchStart, deepSearchEnd, validAt);
+                    if (r2 != null) {
+                        r = getDestination(r2.getId(), validAt);
+                    }
+                }
+
+                return r;
+            }
+        } catch(Exception e) {
+            Logger.logdebug(e);
+        }
+        return null;
+    }
+
+    public DestinationRecord findDestination(String name, String bths, long validAt, long deepSearchStart, long deepSearchEnd) {
+        DestinationRecord r = findDestinationFromString(name, bths, validAt, deepSearchStart, deepSearchEnd);
+        if (r == null && name != null && name.length() > 0) {
+            // not found; try to find as prefixed with water
+            int pos = name.indexOf(DestinationRecord.WATERS_DESTINATION_DELIMITER);
+            if (pos > 0 && pos+1 < name.length()) {
+                name = name.substring(pos+1);
+                r = findDestinationFromString(name, bths, validAt, deepSearchStart, deepSearchEnd);
+            }
+        }
+        if (r == null && name != null && name.length() > 0) {
+            // not found; try to find as postfixed with boathouse name
+            String dest = DestinationRecord.getDestinationNameFromPostfixedDestinationBoathouseString(name);
+            bths = DestinationRecord.getBoathouseNameFromPostfixedDestinationBoathouseString(name);
+            if (dest != null && bths != null && dest.length() > 0 && bths.length() > 0) {
+                r = findDestinationFromString(dest, bths, validAt, deepSearchStart, deepSearchEnd);
+            }
+        }
+        return r;
     }
 
     public boolean isDestinationDeleted(UUID destinationId) {

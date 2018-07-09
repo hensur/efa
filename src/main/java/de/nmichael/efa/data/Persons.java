@@ -10,6 +10,7 @@
 
 package de.nmichael.efa.data;
 
+import de.nmichael.efa.Daten;
 import de.nmichael.efa.util.*;
 import de.nmichael.efa.data.storage.*;
 import de.nmichael.efa.data.types.DataTypeList;
@@ -208,6 +209,49 @@ public class Persons extends StorageObject {
             Logger.logdebug(e);
             return null;
         }
+    }
+
+    /**
+    Deep search for a person.
+    The method searches the database in the validity range of the logbook for a person
+    with the given name.
+    If a previously active record with the name exists, search with its ID for a currently
+    active record of the same person, who probably has a different name by now.
+
+    @param name: The person's name
+    @param validAt: Timestamp at which the person should be active
+    @param deepSearchStart: Start of search/logbook range
+    @param deepSearchEnd: End of search/logbook range
+
+    @return The found person as a PersonRecord or null
+     */
+    public PersonRecord findPerson(String name, long validAt, long deepSearchStart, long deepSearchEnd) {
+        try {
+            // TODO: is this check still neccessary?
+            if (Daten.efaConfig.getValuePostfixPersonsWithClubName()) {
+                name = PersonRecord.trimAssociationPostfix(name);
+            }
+            if (name.length() > 0) {
+                PersonRecord r = getPerson(name, validAt);
+
+                // Since we search by name, it could be that the user entered name "A", which is
+                // not currently valid, but appears in the AutoComplete list because it is valid
+                // some other time for this logbook. It might be that "A" is just another name for
+                // "B" of the same record, which is valid. If there is a "B", we will use that.
+                // That means, even though the user entered "A", we will save the ID, and display "B".
+                if (validAt > 0 && r == null && deepSearchEnd > 0 && deepSearchStart > 0) {
+                    PersonRecord r2 = getPerson(name, deepSearchStart, deepSearchEnd, validAt);
+                    if (r2 != null) {
+                        r = getPerson(r2.getId(), validAt);
+                    }
+                }
+
+                return r;
+            }
+        } catch(Exception e) {
+            Logger.logdebug(e);
+        }
+        return null;
     }
 
     public boolean isPersonExist(UUID id) {

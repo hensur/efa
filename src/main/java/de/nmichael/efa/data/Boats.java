@@ -117,6 +117,53 @@ public class Boats extends StorageObject {
         }
     }
 
+    public Vector<BoatRecord> getAllBoats(long validAt, boolean alsoDeleted, boolean alsoInvisible) {
+        try {
+            Vector<BoatRecord> v = new Vector<BoatRecord>();
+            DataKeyIterator it = this.data().getStaticIterator();
+            DataKey k = it.getFirst();
+            while (k != null) {
+                BoatRecord r = (BoatRecord) this.data().get(k);
+                if (r != null && (r.isValidAt(validAt) || (r.getDeleted() && alsoDeleted)) && (!r.getInvisible() || alsoInvisible)) {
+                    v.add(r);
+                }
+                k = it.getNext();
+            }
+            return v;
+        } catch (Exception e) {
+            Logger.logdebug(e);
+            return null;
+        }
+    }
+
+    public BoatRecord findBoat(String name, long validAt, long deepSearchStart, long deepSearchEnd) {
+        try {
+            if (name.length() > 0) {
+                BoatRecord r = getBoat(name, validAt);
+
+                // If we have not found a valid record, we next try whether we can find
+                // any (currently invalid) record for that name (within the validiy range
+                // of this lookbook). If we find such a record, we use its ID to find
+                // yet another record of the same ID, which might be valid now.
+                // Since we search by name, it could be that the user entered name "A", which is
+                // not currently valid, but appears in the AutoComplete list because it is valid
+                // some other time for this logbook. It might be that "A" is just another name for
+                // "B" of the same record, which is valid. If there is a "B", we will use that.
+                // That means, even though the user entered "A", we will save the ID, and display "B".
+                if (validAt > 0 && r == null) {
+                    BoatRecord r2 = getBoat(name, deepSearchStart, deepSearchEnd, validAt);
+                    if (r2 != null) {
+                        r = getBoat(r2.getId(), validAt);
+                    }
+                }
+                return r;
+            }
+        } catch(Exception e) {
+            Logger.logdebug(e);
+        }
+        return null;
+    }
+
     public boolean isValidAt(UUID boatId, long validAt) {
         try {
             DataRecord r = data().getValidAt(BoatRecord.getKey(boatId, validAt), validAt);
