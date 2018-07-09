@@ -35,6 +35,10 @@ public class DataTypeIntString implements Cloneable, Comparable<DataTypeIntStrin
         return new DataTypeIntString(s);
     }
 
+    public static DataTypeIntString parseInt(int i) {
+        return new DataTypeIntString(Integer.toString(i));
+    }
+
     public String toString() {
         if (value != null) {
             return value;
